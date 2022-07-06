@@ -8,6 +8,7 @@ class Main:
         self.pre = None
         self.add = None
 
+        "conflict haha"
       
 
     
