@@ -7,6 +7,7 @@ class Main:
         self.next = None
         self.pre = None
         self.test = None
+        self.test2 = None
       
 
     
