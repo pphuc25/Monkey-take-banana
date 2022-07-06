@@ -1,0 +1,9 @@
+class TestCase:
+    def __init__(self) -> None:
+        pass
+
+class Main:
+    def __init__(self) -> None:
+        pass
+
+    
