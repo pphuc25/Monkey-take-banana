@@ -36,5 +36,7 @@ class Main:
             for column in range(columns):
                 if grid[row][column] == '0' and (row, column) not in self.visited:
                     self.bfs(row, column)
+                    
+# Phuc an cut
             
       
