@@ -5,14 +5,16 @@ class TestCase:
     def __init__(self, row, column, distance) -> None:
         self.row = row
         self.column = column
-        self.distance = distance
 
 class Main:
-    def __init__(self) -> None:
+    def __init__(self, value) -> None:
         self.visited = set()
-        self.grid = []
+        self.grid = [value]
 
     def bfs(self, rows, columns):
+        can_take_banana = False
+        if [1, 2] in self.visited:
+            can_take_banana = True
         queue = deque()
         self.visited.add((rows, columns))
         queue.append((rows, columns))
@@ -28,7 +30,10 @@ class Main:
                     queue.append((r, c))
                     self.visited.add((r, c))
 
-        
+                if self.grid[r, c] in [1, 2]:
+
+                if can_take_banana == True:
+                    
 
 
     def isValid(self, rows, columns, visited, grid):
@@ -36,7 +41,5 @@ class Main:
             for column in range(columns):
                 if grid[row][column] == '0' and (row, column) not in self.visited:
                     self.bfs(row, column)
-                    
-# Phuc an cut
-            
+
       
