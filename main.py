@@ -10,10 +10,12 @@ class Main:
     def __init__(self, value) -> None:
         self.visited = set()
         self.grid = [value]
-        self.chair, self.stick, self.banana = (0, 0), (0, 0), (0, 0)
+        self.banana = (0, 0)
+        self.chair = (0, 0)
+        self.stick = (0, 0)
 
     def bfs(self, rows, columns):
-        can_take_banana = False  
+        can_take_banana = False
         queue = deque()
         self.visited.add((rows, columns))
         queue.append((rows, columns))
@@ -35,16 +37,15 @@ class Main:
                     self.stick = (r, c)
                 if self.grid[r, c] == 3:
                     self.banana = (r, c)
-                if self.chair != (0, 0) and self.stick != (0, 0) and self.banana != (0, 0):
-                    break
-                
+
+                if can_take_banana == True:
+                    
 
 
-
-    def isValid(self, rows, columns):
+    def isValid(self, rows, columns, visited, grid):
         for row in range(rows):
             for column in range(columns):
-                if self.grid[row][column] == '0' and (row, column) not in self.visited:
+                if grid[row][column] == '0' and (row, column) not in self.visited:
                     self.bfs(row, column)
 
       
