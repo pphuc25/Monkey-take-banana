@@ -5,14 +5,14 @@ class TestCase:
     def __init__(self, row, column, distance) -> None:
         self.row = row
         self.column = column
-        self.banana = (0, 0)
-        self.chair = (0, 0)
-        self.stick = (0, 0)
 
 class Main:
     def __init__(self, value) -> None:
         self.visited = set()
         self.grid = [value]
+        self.banana = (0, 0)
+        self.chair = (0, 0)
+        self.stick = (0, 0)
 
     def bfs(self, rows, columns):
         can_take_banana = False
@@ -31,8 +31,12 @@ class Main:
                     queue.append((r, c))
                     self.visited.add((r, c))
 
-                if self.grid[r, c] in [1, 2]:
-
+                if self.grid[r, c] == 1:
+                    self.chair = (r, c)
+                if self.grid[r, c] == 2:
+                    self.stick = (r, c)
+                if self.grid[r, c] == 3:
+                    self.banana = (r, c)
 
                 if can_take_banana == True:
                     
