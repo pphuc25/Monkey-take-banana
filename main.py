@@ -13,8 +13,6 @@ class Main:
 
     def bfs(self, rows, columns):
         can_take_banana = False
-        if [1, 2] in self.visited:
-            can_take_banana = True
         queue = deque()
         self.visited.add((rows, columns))
         queue.append((rows, columns))
@@ -30,10 +28,10 @@ class Main:
                     queue.append((r, c))
                     self.visited.add((r, c))
 
-                if self.grid[r, c] in [1, 2]:
+                if self.grid[r, c] == 1:
 
                 if can_take_banana == True:
-                    
+
 
 
     def isValid(self, rows, columns, visited, grid):
