@@ -5,14 +5,15 @@ class TestCase:
     def __init__(self, row, column, distance) -> None:
         self.row = row
         self.column = column
-        self.banana = (0, 0)
-        self.chair = (0, 0)
-        self.stick = (0, 0)
+        
 
 class Main:
     def __init__(self, value) -> None:
         self.visited = set()
         self.grid = [value]
+        self.banana = (0, 0)
+        self.chair = (0, 0)
+        self.stick = (0, 0)
 
     def bfs(self, rows, columns):
         can_take_banana = False
@@ -32,6 +33,9 @@ class Main:
                     self.visited.add((r, c))
 
                 if self.grid[r, c] == 1:
+                    self.
+
+                if self.grid[r, c] == 2:
 
 
                 if can_take_banana == True:
@@ -41,7 +45,7 @@ class Main:
     def isValid(self, rows, columns, visited, grid):
         for row in range(rows):
             for column in range(columns):
-                if grid[row][column] == '0' and (row, column) not in self.visited:
+                if self.grid[row][column] == '0' and (row, column) not in self.visited:
                     self.bfs(row, column)
 
       
