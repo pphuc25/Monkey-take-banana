@@ -5,6 +5,9 @@ class TestCase:
     def __init__(self, row, column, distance) -> None:
         self.row = row
         self.column = column
+        self.banana = (0, 0)
+        self.chair = (0, 0)
+        self.stick = (0, 0)
 
 class Main:
     def __init__(self, value) -> None:
@@ -29,6 +32,7 @@ class Main:
                     self.visited.add((r, c))
 
                 if self.grid[r, c] == 1:
+
 
                 if can_take_banana == True:
 
