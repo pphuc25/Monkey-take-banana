@@ -4,6 +4,9 @@ from collections import deque
 ROW = 5
 COLUMN = 5
 
+def distance(point1, point2):
+    return abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
+
 class Main:
 
     def __init__(self) -> None:
@@ -46,9 +49,9 @@ class Main:
                 if self.grid[r][c] == 3:
                     self.banana = (r, c)
 
-    # def movement(self):
-        
-
+    def movement(self):
+        print('Pick chair first', distance((0,0), self.chair) + distance(self.chair, self.stick) + distance(self.stick, self.banana))
+        print('Pick stick first', distance((0, 0), self.stick) + distance(self.stick, self.chair) + distance(self.chair, self.banana))
 
     def isValid(self, rows, columns):
         for row in range(rows):
@@ -63,4 +66,5 @@ if __name__ == "__main__":
     print(play.grid)
     play.find_location_object(0, 0)
     print(play.banana, play.chair, play.stick)
+    play.movement()
 
