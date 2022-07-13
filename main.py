@@ -139,7 +139,10 @@ monkey = pygame.image.load('monkey.png')
 chair = pygame.image.load('chair.png')
 stick = pygame.image.load('stick.png')
 banana = pygame.image.load('banana.png')
-floor = pygame.image.load('floor.png')
+floor = pygame.image.load('floor.jpg')
+icon = pygame.image.load('monkeyIcon.png')
+
+pygame.display.set_icon(icon)
 
 def quitgame():
     pygame.quit()
@@ -173,14 +176,12 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT and x_monkey >= 100:
                     x_monkey -= 100
-                elif event.key == pygame.K_RIGHT and x_monkey < 700:
+                elif event.key == pygame.K_RIGHT and x_monkey < 800:
                     x_monkey += 100
                 elif event.key == pygame.K_UP and y_monkey >= 100:
                     y_monkey -= 100
                 elif event.key == pygame.K_DOWN and y_monkey < 700:
                     y_monkey += 100
-
-        gameDisplay.fill(WHITE)
 
         gameDisplay.blit(floor, (0, 0))
 
@@ -197,9 +198,9 @@ def game_loop():
             show_image(x_stick, y_stick, stick)
         if not player.have_chair:
             show_image(x_chair, y_chair, chair)
+        show_image(x_monkey, y_monkey, monkey)
         if not player.have_banana:
             show_image(x_banana, y_banana, banana)
-        show_image(x_monkey, y_monkey, monkey)
 
         pygame.display.update()
         clock.tick(60)
