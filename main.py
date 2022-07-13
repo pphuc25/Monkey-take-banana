@@ -152,6 +152,67 @@ def quitgame():
 def show_image(x, y, image):
     gameDisplay.blit(image, (x, y))
 
+def text_object(text, font):
+    textSurface = font.render(text, True, BLACK)
+    return textSurface, textSurface.get_rect()
+
+def button(msg, x, y, w, h, ic, ac, size, action = None):
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+
+    if x < mouse[0] < x + w and y < mouse[1] < y + h:
+        pygame.draw.rect(gameDisplay, ic, (x, y, w, h))
+
+        if click[0] == 1 and action is not None:
+            action()
+    else:
+        pygame.draw.rect(gameDisplay, ac, (x, y, w, h))
+
+    smallText = pygame.font.Font('freesansbold.ttf', size)
+    TextSurf, TextRect = text_object(msg, smallText)
+    TextRect.center = (x + w/2, y + h/2)
+    gameDisplay.blit(TextSurf, TextRect)
+
+def finish():
+
+    Finish = True
+
+    while Finish:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quitgame()
+        largeText = pygame.font.Font('freesansbold.ttf', 25)
+        TextSurf, TextRect = text_object('CONGRATULATION! YOU WIN THE GAME', largeText)
+        TextRect.center = ((display_width / 2), (display_height / 2))
+        gameDisplay.blit(TextSurf, TextRect)
+
+        button('REPLAY', 150, 600, 100, 50, GREEN, BRIGHT_GREEN, 20, game_loop)
+
+        button('QUIT', 550, 600, 100, 50, RED, BRIGHT_RED, 20, quitgame)
+
+        pygame.display.update()
+        clock.tick(30)
+
+def game_intro():
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quitgame()
+        gameDisplay.fill(WHITE)
+        largeText = pygame.font.Font('freesansbold.ttf', 50)
+        TextSurf, TextRect = text_object('MOKEY AND BANANA', largeText)
+        TextRect.center = ((display_width/2), (display_height/2))
+        gameDisplay.blit(TextSurf, TextRect)
+
+        button('PLAY', 150, 600, 100, 50, GREEN, BRIGHT_GREEN, 20, game_loop)
+
+        button('QUIT', 550, 600, 100, 50, RED, BRIGHT_RED, 20, quitgame)
+
+        pygame.display.update()
+        clock.tick(30)
+
 
 def game_loop():
     play = Main()
@@ -176,7 +237,7 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT and x_monkey >= 100:
                     x_monkey -= 100
-                elif event.key == pygame.K_RIGHT and x_monkey < 800:
+                elif event.key == pygame.K_RIGHT and x_monkey < 700:
                     x_monkey += 100
                 elif event.key == pygame.K_UP and y_monkey >= 100:
                     y_monkey -= 100
@@ -201,10 +262,12 @@ def game_loop():
         show_image(x_monkey, y_monkey, monkey)
         if not player.have_banana:
             show_image(x_banana, y_banana, banana)
+        else:
+            finish()
 
         pygame.display.update()
         clock.tick(60)
 
 
 if __name__ == "__main__":
-    game_loop()
+    game_intro()
