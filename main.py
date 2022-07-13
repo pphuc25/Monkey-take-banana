@@ -12,10 +12,10 @@ pygame.display.set_caption('Monkey and Banana')
 clock = pygame.time.Clock()
 
 
-monkey = pygame.image.load('monkey.png')
 chair = pygame.image.load('chair.png')
 stick = pygame.image.load('stick.png')
 banana = pygame.image.load('banana.png')
+monkey = pygame.image.load('monkey.png')
 
 
 def quitgame():
