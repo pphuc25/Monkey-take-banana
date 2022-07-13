@@ -1,5 +1,68 @@
 from random import randint
 from collections import deque
+import pygame
+
+pygame.init()
+
+display_width = 500
+display_height = 500
+
+gameDisplay = pygame.display.set_mode((display_width,display_height))
+pygame.display.set_caption('Monkey and Banana')
+
+clock = pygame.time.Clock()
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+
+RED = (200,0,0)
+GREEN = (0,200,0)
+BLUE = (0,0,255)
+
+BRIGHT_GREEN = (0,255,0)
+BRIGHT_RED = (255,0,0)
+
+monkey = pygame.image.load('monkey.png')
+chair = pygame.image.load('chair.png')
+stick = pygame.image.load('stick.png')
+banana = pygame.image.load('banana.png')
+
+def quitgame():
+    pygame.quit()
+    quit()
+
+def show_image(x, y, image):
+    gameDisplay.blit(image, (x, y))
+
+def game_loop(pos_chair, pos_stick, pos_banana):
+
+    x_monkey, y_monkey = 0, 0
+    x_chair, y_chair = pos_chair[0] * 100, pos_chair[1] * 100
+    x_stick, y_stick = pos_stick[0] * 100, pos_stick[1] * 100
+    x_banana, y_banana = pos_banana[0] * 100, pos_banana[1] * 100
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT and x_monkey >= 100:
+                    x_monkey -= 100
+                elif event.key == pygame.K_RIGHT and x_monkey < 400:
+                    x_monkey += 100
+                elif event.key == pygame.K_UP and y_monkey >= 100:
+                    y_monkey -= 100
+                elif event.key == pygame.K_DOWN and y_monkey < 400:
+                    y_monkey += 100
+
+        gameDisplay.fill(WHITE)
+
+        show_image(x_stick, y_stick, stick)
+        show_image(x_chair, y_chair, chair)
+        show_image(x_banana, y_banana, banana)
+        show_image(x_monkey, y_monkey, monkey)
+
+        pygame.display.update()
+        clock.tick(60)
 
 ROW = 5
 COLUMN = 5
@@ -139,5 +202,6 @@ if __name__ == "__main__":
     print(play.grid)
     play.find_location_object(0, 0)
     print(play.banana, play.chair, play.stick)
+    game_loop(play.chair, play.stick, play.banana)
     play.movement()
 
