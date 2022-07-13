@@ -1,3 +1,4 @@
+import time
 from random import randint
 from collections import deque
 from size_and_color import *
@@ -15,17 +16,24 @@ class Monkey:
     def move(self, pos):
         if self.position[0] < pos[0]:
             for _ in range(pos[0] - self.position[0]):
+                y_monkey += 100
                 print('Down')
+                time.sleep(1)
         else:
             for _ in range(self.position[0] - pos[0]):
+                y_monkey -= 100
                 print('Up')
+                time.sleep(1)
 
         if self.position[1] < pos[1]:
             for _ in range(pos[1] - self.position[1]):
+                x_monkey += 100
                 print('Right')
         else:
             for _ in range(self.position[1] - pos[1]):
+                x_monkey -= 100
                 print('Left')
+                time.sleep(1)
 
         self.position = pos
 
@@ -213,6 +221,9 @@ def game_intro():
         pygame.display.update()
         clock.tick(30)
 
+def autoplay():
+    auto_play = True
+    game_loop()
 
 def game_loop():
     play = Main()
@@ -267,7 +278,6 @@ def game_loop():
 
         pygame.display.update()
         clock.tick(60)
-
 
 if __name__ == "__main__":
     game_intro()
