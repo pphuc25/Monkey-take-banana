@@ -1,22 +1,10 @@
 from random import randint
 from collections import deque
+from size_and_color import *
 import pygame
 
 pygame.init()
 
-ROW = 5
-COLUMN = 5
-
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (200, 0, 0)
-GREEN = (0, 200, 0)
-BLUE = (0, 0, 255)
-BRIGHT_GREEN = (0, 255, 0)
-BRIGHT_RED = (255, 0, 0)
-
-display_width = 500
-display_height = 500
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Monkey and Banana')
@@ -196,13 +184,6 @@ class Main:
 
         player.move(self.banana)
         player.take_banana(self)
-
-    def isValid(self, rows, columns):
-        for row in range(rows):
-            for column in range(columns):
-                if (self.grid[row][column] == 0
-                        and (row, column) not in self.visited):
-                    self.find_location_object(row, column)
 
 
 if __name__ == "__main__":
