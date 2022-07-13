@@ -7,12 +7,48 @@ COLUMN = 5
 def distance(point1, point2):
     return abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
 
+class Monkey:
+    def __init__(self):
+        self.position = (0, 0)
+        self.have_chair, self.have_stick = False, False
+
+    def move(self, pos):
+        if self.position[0] < pos[0]:
+            for _ in range(pos[0] - self.position[0]):
+                print('down')
+        else:
+            for _ in range(self.position[0] - pos[0]):
+                print('up')
+
+        if self.position[1] < pos[1]:
+            for _ in range(pos[1] - self.position[1]):
+                print('right')
+        else:
+            for _ in range(self.position[1] - pos[1]):
+                print('left')
+
+        self.position = pos
+
+    def pick_chair(self, map):
+        if map.chair == self.position:
+            self.have_chair = True
+            print('Have chair')
+
+    def pick_stick(self, map):
+        if map.stick == self.position:
+            self.have_stick = True
+            print('Have stick')
+
+    def take_banana(self, map):
+        if map.banana == self.position and self.have_stick and self.have_chair:
+            print('Have banana')
+
 class Main:
 
     def __init__(self) -> None:
         self.grid = [[0 for _ in range(ROW)] for _ in range(COLUMN) ]
         self.visited = set()
-        self.monkey_pos, self.chair, self.stick, self.banana = (0, 0), (0, 0), (0, 0), (0, 0)
+        self.chair, self.stick, self.banana =(0, 0), (0, 0), (0, 0)
 
     def set_location_object(self):
         # set the chair as number 1, stick as number 2 and bananas as number 3
@@ -25,14 +61,14 @@ class Main:
             visited.add((temp_row, temp_column))
 
             if not is_created_chair:
-                self.grid[randint(0, ROW - 1)][randint(0, COLUMN - 1)] = 1
+                self.grid[temp_row][temp_column] = 1
                 is_created_chair = True
 
             elif not is_created_stick:
-                self.grid[randint(0, ROW - 1)][randint(0, COLUMN - 1)] = 2
+                self.grid[temp_row][temp_column] = 2
                 is_created_stick = True
             else:
-                self.grid[randint(0, ROW - 1)][randint(0, COLUMN - 1)] = 3
+                self.grid[temp_row][temp_column] = 3
                 is_created_banana = True
 
             if is_created_chair and is_created_stick and is_created_banana:
@@ -67,9 +103,28 @@ class Main:
                 if self.grid[r][c] == 3:
                     self.banana = (r, c)
 
+    def pick_chair_first(self):
+        return distance((0, 0), self.chair) + distance(self.chair, self.stick) + distance(self.stick, self.banana)
+
+    def pick_stick_first(self):
+        return distance((0, 0), self.stick) + distance(self.stick, self.chair) + distance(self.chair, self.banana)
+
     def movement(self):
-        print('Pick chair first', distance((0, 0), self.chair) + distance(self.chair, self.stick) + distance(self.stick, self.banana))
-        print('Pick stick first', distance((0, 0), self.stick) + distance(self.stick, self.chair) + distance(self.chair, self.banana))
+        player = Monkey()
+        if self.pick_chair_first() < self.pick_stick_first():
+            player.move(self.chair)
+            player.pick_chair(self)
+            player.move(self.stick)
+            player.pick_stick(self)
+            player.move(self.banana)
+            player.take_banana(self)
+        else:
+            player.move(self.stick)
+            player.pick_stick(self)
+            player.move(self.chair)
+            player.pick_chair(self)
+            player.move(self.banana)
+            player.take_banana(self)
 
     def isValid(self, rows, columns):
         for row in range(rows):
