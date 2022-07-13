@@ -16,9 +16,27 @@ class Main:
 
     def set_location_object(self):
         # set the chair as number 1, stick as number 2 and bananas as number 3
-        self.grid[randint(0, ROW - 1)][randint(0, COLUMN - 1)] = 1
-        self.grid[randint(0, ROW - 1)][randint(0, COLUMN - 1)] = 2
-        self.grid[randint(0, ROW - 1)][randint(0, COLUMN - 1)] = 3
+        visited = set()
+        yet_created, is_created_chair, is_created_stick, is_created_banana = False, False, False, False
+        while not yet_created:
+            temp_row, temp_column = randint(0, ROW - 1), randint(0, COLUMN - 1)
+            if (temp_row, temp_column) in visited:
+                continue
+            visited.add((temp_row, temp_column))
+
+            if not is_created_chair:
+                self.grid[randint(0, ROW - 1)][randint(0, COLUMN - 1)] = 1
+                is_created_chair = True
+
+            elif not is_created_stick:
+                self.grid[randint(0, ROW - 1)][randint(0, COLUMN - 1)] = 2
+                is_created_stick = True
+            else:
+                self.grid[randint(0, ROW - 1)][randint(0, COLUMN - 1)] = 3
+                is_created_banana = True
+
+            if is_created_chair and is_created_stick and is_created_banana:
+                yet_created = True
 
     def find_location_object(self, rows, columns):
         queue = deque()
@@ -50,7 +68,7 @@ class Main:
                     self.banana = (r, c)
 
     def movement(self):
-        print('Pick chair first', distance((0,0), self.chair) + distance(self.chair, self.stick) + distance(self.stick, self.banana))
+        print('Pick chair first', distance((0, 0), self.chair) + distance(self.chair, self.stick) + distance(self.stick, self.banana))
         print('Pick stick first', distance((0, 0), self.stick) + distance(self.stick, self.chair) + distance(self.chair, self.banana))
 
     def isValid(self, rows, columns):
