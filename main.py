@@ -4,34 +4,40 @@ import pygame
 
 pygame.init()
 
+ROW = 5
+COLUMN = 5
+
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (200, 0, 0)
+GREEN = (0, 200, 0)
+BLUE = (0, 0, 255)
+BRIGHT_GREEN = (0, 255, 0)
+BRIGHT_RED = (255, 0, 0)
+
 display_width = 500
 display_height = 500
 
-gameDisplay = pygame.display.set_mode((display_width,display_height))
+gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Monkey and Banana')
 
 clock = pygame.time.Clock()
-BLACK = (0,0,0)
-WHITE = (255,255,255)
 
-RED = (200,0,0)
-GREEN = (0,200,0)
-BLUE = (0,0,255)
-
-BRIGHT_GREEN = (0,255,0)
-BRIGHT_RED = (255,0,0)
 
 monkey = pygame.image.load('monkey.png')
 chair = pygame.image.load('chair.png')
 stick = pygame.image.load('stick.png')
 banana = pygame.image.load('banana.png')
 
+
 def quitgame():
     pygame.quit()
     quit()
 
+
 def show_image(x, y, image):
     gameDisplay.blit(image, (x, y))
+
 
 def game_loop(pos_chair, pos_stick, pos_banana):
 
@@ -64,11 +70,10 @@ def game_loop(pos_chair, pos_stick, pos_banana):
         pygame.display.update()
         clock.tick(60)
 
-ROW = 5
-COLUMN = 5
 
 def distance(point1, point2):
     return abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
+
 
 class Monkey:
     def __init__(self):
@@ -78,17 +83,17 @@ class Monkey:
     def move(self, pos):
         if self.position[0] < pos[0]:
             for _ in range(pos[0] - self.position[0]):
-                print('down')
+                print('Down')
         else:
             for _ in range(self.position[0] - pos[0]):
-                print('up')
+                print('Up')
 
         if self.position[1] < pos[1]:
             for _ in range(pos[1] - self.position[1]):
-                print('right')
+                print('Right')
         else:
             for _ in range(self.position[1] - pos[1]):
-                print('left')
+                print('Left')
 
         self.position = pos
 
@@ -106,12 +111,13 @@ class Monkey:
         if map.banana == self.position and self.have_stick and self.have_chair:
             print('Have banana')
 
+
 class Main:
 
     def __init__(self) -> None:
-        self.grid = [[0 for _ in range(ROW)] for _ in range(COLUMN) ]
+        self.grid = [[0 for _ in range(ROW)] for _ in range(COLUMN)]
         self.visited = set()
-        self.chair, self.stick, self.banana =(0, 0), (0, 0), (0, 0)
+        self.chair, self.stick, self.banana = (0, 0), (0, 0), (0, 0)
 
     def set_location_object(self):
         # set the chair as number 1, stick as number 2 and bananas as number 3
@@ -137,6 +143,9 @@ class Main:
             if is_created_chair and is_created_stick and is_created_banana:
                 yet_created = True
 
+    def get_all_object(self):
+        return self.chair != (0, 0) and self.stick != (0, 0) and self.banana != (0, 0)
+
     def find_location_object(self, rows, columns):
         queue = deque()
         self.visited.add((rows, columns))
@@ -144,11 +153,11 @@ class Main:
         directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
         while queue:
             temp_row, temp_column = queue.popleft()
-            if self.chair != (0, 0) and self.stick != (0, 0) and self.banana != (0, 0):
+            if self.get_all_object():
                 break
             for direct_row, direct_column in directions:
                 r, c = temp_row + direct_row, temp_column + direct_column
-                if (r not in range(ROW) 
+                if (r not in range(ROW)
                         or c not in range(COLUMN)):
                     continue
 
@@ -157,7 +166,7 @@ class Main:
                     queue.append((r, c))
                     self.visited.add((r, c))
 
-                if self.chair != (0, 0) and self.stick != (0, 0) and self.banana != (0, 0):
+                if self.get_all_object():
                     break
                 if self.grid[r][c] == 1:
                     self.chair = (r, c)
@@ -179,15 +188,14 @@ class Main:
             player.pick_chair(self)
             player.move(self.stick)
             player.pick_stick(self)
-            player.move(self.banana)
-            player.take_banana(self)
         else:
             player.move(self.stick)
             player.pick_stick(self)
             player.move(self.chair)
             player.pick_chair(self)
-            player.move(self.banana)
-            player.take_banana(self)
+
+        player.move(self.banana)
+        player.take_banana(self)
 
     def isValid(self, rows, columns):
         for row in range(rows):
@@ -196,12 +204,12 @@ class Main:
                         and (row, column) not in self.visited):
                     self.find_location_object(row, column)
 
+
 if __name__ == "__main__":
     play = Main()
     play.set_location_object()
     print(play.grid)
     play.find_location_object(0, 0)
-    print(play.banana, play.chair, play.stick)
+    print(play.chair, play.stick, play.banana)
     game_loop(play.chair, play.stick, play.banana)
     play.movement()
-
