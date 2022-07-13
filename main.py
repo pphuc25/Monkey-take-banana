@@ -168,7 +168,7 @@ def button(msg, x, y, w, h, ic, ac, size, action = None):
     else:
         pygame.draw.rect(gameDisplay, ac, (x, y, w, h))
 
-    smallText = pygame.font.Font('freesansbold.ttf', size)
+    smallText = pygame.font.SysFont('Times New Roman', size)
     TextSurf, TextRect = text_object(msg, smallText)
     TextRect.center = (x + w/2, y + h/2)
     gameDisplay.blit(TextSurf, TextRect)
@@ -181,7 +181,7 @@ def finish():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quitgame()
-        largeText = pygame.font.Font('freesansbold.ttf', 25)
+        largeText = pygame.font.SysFont('Times New Roman', 40)
         TextSurf, TextRect = text_object('CONGRATULATION! YOU WIN THE GAME', largeText)
         TextRect.center = ((display_width / 2), (display_height / 2))
         gameDisplay.blit(TextSurf, TextRect)
@@ -201,7 +201,7 @@ def game_intro():
             if event.type == pygame.QUIT:
                 quitgame()
         gameDisplay.fill(WHITE)
-        largeText = pygame.font.Font('freesansbold.ttf', 50)
+        largeText = pygame.font.SysFont('Times New Roman', 70)
         TextSurf, TextRect = text_object('MOKEY AND BANANA', largeText)
         TextRect.center = ((display_width/2), (display_height/2))
         gameDisplay.blit(TextSurf, TextRect)
