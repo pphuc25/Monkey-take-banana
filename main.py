@@ -1,8 +1,11 @@
 from random import randint
 from collections import deque
 import pygame
-
+from PIL import Image
 pygame.init()
+
+path = r"D:\visualStudioCodeProject\Exercises\Assignment-2\stick_1.png"
+image=Image.open(path)
 
 ROW = 5
 COLUMN = 5
@@ -26,7 +29,7 @@ clock = pygame.time.Clock()
 
 monkey = pygame.image.load('monkey.png')
 chair = pygame.image.load('chair.png')
-stick = pygame.image.load('stick.png')
+stick = pygame.image.load("stick_1.png")
 banana = pygame.image.load('banana.png')
 
 
