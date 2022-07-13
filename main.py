@@ -3,62 +3,6 @@ from collections import deque
 from size_and_color import *
 import pygame
 
-pygame.init()
-
-
-gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption('Monkey and Banana')
-
-clock = pygame.time.Clock()
-
-
-chair = pygame.image.load('chair.png')
-stick = pygame.image.load('stick.png')
-banana = pygame.image.load('banana.png')
-monkey = pygame.image.load('monkey.png')
-
-
-def quitgame():
-    pygame.quit()
-    quit()
-
-
-def show_image(x, y, image):
-    gameDisplay.blit(image, (x, y))
-
-
-def game_loop(pos_chair, pos_stick, pos_banana):
-
-    x_monkey, y_monkey = 0, 0
-    x_chair, y_chair = pos_chair[0] * 100, pos_chair[1] * 100
-    x_stick, y_stick = pos_stick[0] * 100, pos_stick[1] * 100
-    x_banana, y_banana = pos_banana[0] * 100, pos_banana[1] * 100
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and x_monkey >= 100:
-                    x_monkey -= 100
-                elif event.key == pygame.K_RIGHT and x_monkey < 400:
-                    x_monkey += 100
-                elif event.key == pygame.K_UP and y_monkey >= 100:
-                    y_monkey -= 100
-                elif event.key == pygame.K_DOWN and y_monkey < 400:
-                    y_monkey += 100
-
-        gameDisplay.fill(WHITE)
-
-        show_image(x_stick, y_stick, stick)
-        show_image(x_chair, y_chair, chair)
-        show_image(x_banana, y_banana, banana)
-        show_image(x_monkey, y_monkey, monkey)
-
-        pygame.display.update()
-        clock.tick(60)
-
-
 def distance(point1, point2):
     return abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
 
@@ -66,7 +10,7 @@ def distance(point1, point2):
 class Monkey:
     def __init__(self):
         self.position = (0, 0)
-        self.have_chair, self.have_stick = False, False
+        self.have_chair, self.have_stick, self.have_banana = False, False, False
 
     def move(self, pos):
         if self.position[0] < pos[0]:
@@ -169,8 +113,7 @@ class Main:
     def pick_stick_first(self):
         return distance((0, 0), self.stick) + distance(self.stick, self.chair) + distance(self.chair, self.banana)
 
-    def movement(self):
-        player = Monkey()
+    def movement(self, player):
         if self.pick_chair_first() < self.pick_stick_first():
             player.move(self.chair)
             player.pick_chair(self)
@@ -185,12 +128,82 @@ class Main:
         player.move(self.banana)
         player.take_banana(self)
 
+pygame.init()
 
-if __name__ == "__main__":
+gameDisplay = pygame.display.set_mode((display_width, display_height))
+pygame.display.set_caption('Monkey and Banana')
+
+clock = pygame.time.Clock()
+
+monkey = pygame.image.load('monkey.png')
+chair = pygame.image.load('chair.png')
+stick = pygame.image.load('stick.png')
+banana = pygame.image.load('banana.png')
+floor = pygame.image.load('floor.png')
+
+def quitgame():
+    pygame.quit()
+    quit()
+
+
+def show_image(x, y, image):
+    gameDisplay.blit(image, (x, y))
+
+
+def game_loop():
     play = Main()
+    player = Monkey()
     play.set_location_object()
     print(play.grid)
     play.find_location_object(0, 0)
     print(play.chair, play.stick, play.banana)
-    game_loop(play.chair, play.stick, play.banana)
-    play.movement()
+    pos_chair = play.chair
+    pos_stick = play.stick
+    pos_banana = play.banana
+
+    x_monkey, y_monkey = 0, 0
+    x_chair, y_chair = pos_chair[1] * 100, pos_chair[0] * 100
+    x_stick, y_stick = pos_stick[1] * 100, pos_stick[0] * 100
+    x_banana, y_banana = pos_banana[1] * 100, pos_banana[0] * 100
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT and x_monkey >= 100:
+                    x_monkey -= 100
+                elif event.key == pygame.K_RIGHT and x_monkey < 700:
+                    x_monkey += 100
+                elif event.key == pygame.K_UP and y_monkey >= 100:
+                    y_monkey -= 100
+                elif event.key == pygame.K_DOWN and y_monkey < 700:
+                    y_monkey += 100
+
+        gameDisplay.fill(WHITE)
+
+        gameDisplay.blit(floor, (0, 0))
+
+        if x_monkey == x_stick and y_monkey == y_stick:
+            player.have_stick = True
+
+        if x_monkey == x_chair and y_monkey == y_chair:
+            player.have_chair = True
+
+        if x_monkey == x_banana and y_monkey == y_banana and player.have_chair and player.have_stick:
+            player.have_banana = True
+
+        if not player.have_stick:
+            show_image(x_stick, y_stick, stick)
+        if not player.have_chair:
+            show_image(x_chair, y_chair, chair)
+        if not player.have_banana:
+            show_image(x_banana, y_banana, banana)
+        show_image(x_monkey, y_monkey, monkey)
+
+        pygame.display.update()
+        clock.tick(60)
+
+
+if __name__ == "__main__":
+    game_loop()
