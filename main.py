@@ -1,3 +1,4 @@
+from argparse import ONE_OR_MORE
 from random import randint
 from collections import deque
 from size_and_color import *
@@ -153,6 +154,8 @@ def show_image(x, y, image):
     gameDisplay.blit(image, (x, y))
 
 
+
+
 def game_loop():
     play = Main()
     player = Monkey()
@@ -174,14 +177,16 @@ def game_loop():
                 pygame.quit()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and x_monkey >= 100:
-                    x_monkey -= 100
-                elif event.key == pygame.K_RIGHT and x_monkey < 800:
-                    x_monkey += 100
-                elif event.key == pygame.K_UP and y_monkey >= 100:
-                    y_monkey -= 100
-                elif event.key == pygame.K_DOWN and y_monkey < 700:
-                    y_monkey += 100
+                if event.key == pygame.K_LEFT and x_monkey >= MIN_LENGTH:
+                    x_monkey -= ONE_STEP
+                elif event.key == pygame.K_RIGHT and x_monkey < MAX_LENGTH:
+                    x_monkey += ONE_STEP
+                elif event.key == pygame.K_UP and y_monkey >= MIN_LENGTH:
+                    y_monkey -= ONE_STEP
+                elif event.key == pygame.K_DOWN and y_monkey < MAX_LENGTH:
+                    y_monkey += ONE_STEP
+
+
 
         gameDisplay.blit(floor, (0, 0))
 
