@@ -4,6 +4,7 @@ from collections import deque
 from size_and_color import *
 import pygame
 
+
 def distance(point1, point2):
     return abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
 
@@ -16,25 +17,21 @@ class Monkey:
     def move(self, pos):
         if self.position[0] < pos[0]:
             for _ in range(pos[0] - self.position[0]):
-                y_monkey += 100
+                y_monkey += ONE_STEP
                 print('Down')
-                time.sleep(1)
         else:
             for _ in range(self.position[0] - pos[0]):
-                y_monkey -= 100
+                y_monkey -= ONE_STEP
                 print('Up')
-                time.sleep(1)
 
         if self.position[1] < pos[1]:
             for _ in range(pos[1] - self.position[1]):
-                x_monkey += 100
+                x_monkey += ONE_STEP
                 print('Right')
         else:
             for _ in range(self.position[1] - pos[1]):
-                x_monkey -= 100
+                x_monkey -= ONE_STEP
                 print('Left')
-                time.sleep(1)
-
         self.position = pos
 
     def pick_chair(self, map):
@@ -136,6 +133,7 @@ class Main:
         player.move(self.banana)
         player.take_banana(self)
 
+
 pygame.init()
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
@@ -152,6 +150,7 @@ icon = pygame.image.load('monkeyIcon.png')
 
 pygame.display.set_icon(icon)
 
+
 def quitgame():
     pygame.quit()
     quit()
@@ -160,11 +159,13 @@ def quitgame():
 def show_image(x, y, image):
     gameDisplay.blit(image, (x, y))
 
+
 def text_object(text, font):
     textSurface = font.render(text, True, BLACK)
     return textSurface, textSurface.get_rect()
 
-def button(msg, x, y, w, h, ic, ac, size, action = None):
+
+def button(msg, x, y, w, h, ic, ac, size, action=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
@@ -181,6 +182,7 @@ def button(msg, x, y, w, h, ic, ac, size, action = None):
     TextRect.center = (x + w/2, y + h/2)
     gameDisplay.blit(TextSurf, TextRect)
 
+
 def finish():
 
     Finish = True
@@ -190,7 +192,8 @@ def finish():
             if event.type == pygame.QUIT:
                 quitgame()
         largeText = pygame.font.SysFont('Times New Roman', 40)
-        TextSurf, TextRect = text_object('CONGRATULATION! YOU WIN THE GAME', largeText)
+        TextSurf, TextRect = text_object(
+            'CONGRATULATION! YOU WIN THE GAME', largeText)
         TextRect.center = ((display_width / 2), (display_height / 2))
         gameDisplay.blit(TextSurf, TextRect)
 
@@ -200,6 +203,7 @@ def finish():
 
         pygame.display.update()
         clock.tick(30)
+
 
 def game_intro():
     intro = True
@@ -216,17 +220,20 @@ def game_intro():
 
         button('PLAY', 150, 600, 100, 50, GREEN, BRIGHT_GREEN, 20, game_loop)
 
-        button('AUTO PLAY', 350, 600, 100, 50, GREEN, BRIGHT_GREEN, 20, autoplay)
+        button('AUTO PLAY', 350, 600, 100, 50,
+               GREEN, BRIGHT_GREEN, 20, autoplay)
 
         button('QUIT', 550, 600, 100, 50, RED, BRIGHT_RED, 20, quitgame)
 
         pygame.display.update()
         clock.tick(30)
 
+
 def autoplay():
     game_loop(True)
 
-def game_loop(auto_play = False):
+
+def game_loop(auto_play=False):
     play = Main()
     player = Monkey()
     play.set_location_object()
@@ -252,67 +259,16 @@ def game_loop(auto_play = False):
             if event.type != pygame.KEYDOWN:
                 continue
 
-            if event.key == pygame.K_LEFT and x_monkey >= 100:
-                x_monkey -= 100
-            elif event.key == pygame.K_RIGHT and x_monkey < 700:
-                x_monkey += 100
-            elif event.key == pygame.K_UP and y_monkey >= 100:
-                y_monkey -= 100
-            elif event.key == pygame.K_DOWN and y_monkey < 700:
-                y_monkey += 100
+            if event.key == pygame.K_LEFT and x_monkey >= MIN_LENGTH:
+                x_monkey -= ONE_STEP
+            elif event.key == pygame.K_RIGHT and x_monkey < MAX_LENGTH:
+                x_monkey += ONE_STEP
+            elif event.key == pygame.K_UP and y_monkey >= MIN_LENGTH:
+                y_monkey -= ONE_STEP
+            elif event.key == pygame.K_DOWN and y_monkey < MAX_LENGTH:
+                y_monkey += ONE_STEP
 
         gameDisplay.blit(floor, (0, 0))
-
-        if auto_play:
-            if play.pick_stick_first() > play.pick_chair_first():
-                if not player.have_stick:
-                    if x_monkey != x_stick:
-                        x_monkey += 100
-                        time.sleep(1)
-                    elif y_monkey != y_stick:
-                        y_monkey += 100
-                        time.sleep(1)
-                elif not player.have_chair:
-                    if x_monkey == x_chair:
-                        if y_monkey < y_chair:
-                            y_monkey += 100
-                        else:
-                            y_monkey -= 100
-                    elif x_monkey < x_chair:
-                        x_monkey += 100
-                    else:
-                        x_monkey -= 100
-                    time.sleep(1)
-            elif not player.have_chair:
-                if x_monkey != x_chair:
-                    x_monkey += 100
-                    time.sleep(1)
-                elif y_monkey != y_chair:
-                    y_monkey += 100
-                    time.sleep(1)
-            elif not player.have_stick:
-                if x_monkey == x_stick:
-                    if y_monkey < y_stick:
-                        y_monkey += 100
-                    else:
-                        y_monkey -= 100
-                elif x_monkey < x_stick:
-                    x_monkey += 100
-                else:
-                    x_monkey -= 100
-                time.sleep(1)
-            if player.have_stick and player.have_chair:
-                if x_monkey != x_banana:
-                    if x_monkey < x_banana:
-                        x_monkey += 100
-                    else:
-                        x_monkey -= 100
-                    time.sleep(1)
-                elif y_monkey < y_banana:
-                    y_monkey += 100
-                else:
-                    y_monkey -= 100
-                time.sleep(1)
 
         if x_monkey == x_stick and y_monkey == y_stick:
             player.have_stick = True
@@ -333,8 +289,60 @@ def game_loop(auto_play = False):
         else:
             finish()
 
+        if auto_play:
+            if play.pick_stick_first() > play.pick_chair_first():
+                if not player.have_stick:
+                    if x_monkey != x_stick:
+                        x_monkey += ONE_STEP
+                        time.sleep(0.5)
+                    elif y_monkey != y_stick:
+                        y_monkey += ONE_STEP
+                        time.sleep(0.5)
+                elif not player.have_chair:
+                    if x_monkey == x_chair:
+                        if y_monkey < y_chair:
+                            y_monkey += ONE_STEP
+                        else:
+                            y_monkey -= ONE_STEP
+                    elif x_monkey < x_chair:
+                        x_monkey += ONE_STEP
+                    else:
+                        x_monkey -= ONE_STEP
+                    time.sleep(0.5)
+            elif not player.have_chair:
+                if x_monkey != x_chair:
+                    x_monkey += ONE_STEP
+                    time.sleep(0.5)
+                elif y_monkey != y_chair:
+                    y_monkey += ONE_STEP
+                    time.sleep(0.5)
+            elif not player.have_stick:
+                if x_monkey == x_stick:
+                    if y_monkey < y_stick:
+                        y_monkey += ONE_STEP
+                    else:
+                        y_monkey -= ONE_STEP
+                elif x_monkey < x_stick:
+                    x_monkey += ONE_STEP
+                else:
+                    x_monkey -= ONE_STEP
+                time.sleep(0.5)
+            if player.have_stick and player.have_chair:
+                if x_monkey != x_banana:
+                    if x_monkey < x_banana:
+                        x_monkey += ONE_STEP
+                    else:
+                        x_monkey -= ONE_STEP
+                    time.sleep(0.5)
+                elif y_monkey < y_banana:
+                    y_monkey += ONE_STEP
+                else:
+                    y_monkey -= ONE_STEP
+                time.sleep(0.5)
+
         pygame.display.update()
         clock.tick(60)
+
 
 if __name__ == "__main__":
     game_intro()
