@@ -14,5 +14,3 @@ display_height = 800
 
 x_monkey = 0
 y_monkey = 0
-
-auto_play = False

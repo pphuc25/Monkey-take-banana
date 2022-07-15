@@ -216,16 +216,17 @@ def game_intro():
 
         button('PLAY', 150, 600, 100, 50, GREEN, BRIGHT_GREEN, 20, game_loop)
 
+        button('AUTO PLAY', 350, 600, 100, 50, GREEN, BRIGHT_GREEN, 20, autoplay)
+
         button('QUIT', 550, 600, 100, 50, RED, BRIGHT_RED, 20, quitgame)
 
         pygame.display.update()
         clock.tick(30)
 
 def autoplay():
-    auto_play = True
-    game_loop()
+    game_loop(True)
 
-def game_loop():
+def game_loop(auto_play = False):
     play = Main()
     player = Monkey()
     play.set_location_object()
@@ -245,6 +246,9 @@ def game_loop():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
+            if auto_play:
+                continue
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT and x_monkey >= 100:
                     x_monkey -= 100
@@ -256,6 +260,64 @@ def game_loop():
                     y_monkey += 100
 
         gameDisplay.blit(floor, (0, 0))
+
+        if auto_play:
+            if play.pick_stick_first() > play.pick_chair_first():
+                if not player.have_stick:
+                    if x_monkey != x_stick:
+                        x_monkey += 100
+                        time.sleep(1)
+                    elif y_monkey != y_stick:
+                        y_monkey += 100
+                        time.sleep(1)
+                elif not player.have_chair:
+                    if x_monkey != x_chair:
+                        if x_monkey < x_chair:
+                            x_monkey += 100
+                        else:
+                            x_monkey -= 100
+                        time.sleep(1)
+                    else:
+                        if y_monkey < y_chair:
+                            y_monkey += 100
+                        else:
+                            y_monkey -= 100
+                        time.sleep(1)
+            else:
+                if not player.have_chair:
+                    if x_monkey != x_chair:
+                        x_monkey += 100
+                        time.sleep(1)
+                    elif y_monkey != y_chair:
+                        y_monkey += 100
+                        time.sleep(1)
+                elif not player.have_stick:
+                    if x_monkey != x_stick:
+                        if x_monkey < x_stick:
+                            x_monkey += 100
+                        else:
+                            x_monkey -= 100
+                        time.sleep(1)
+                    else:
+                        if y_monkey < y_stick:
+                            y_monkey += 100
+                        else:
+                            y_monkey -= 100
+                        time.sleep(1)
+
+            if player.have_stick and player.have_chair:
+                if x_monkey != x_banana:
+                    if x_monkey < x_banana:
+                        x_monkey += 100
+                    else:
+                        x_monkey -= 100
+                    time.sleep(1)
+                else:
+                    if y_monkey < y_banana:
+                        y_monkey += 100
+                    else:
+                        y_monkey -= 100
+                time.sleep(1)
 
         if x_monkey == x_stick and y_monkey == y_stick:
             player.have_stick = True
