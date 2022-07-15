@@ -16,3 +16,6 @@ BRIGHT_RED = (255, 0, 0)
 
 display_width = 800
 display_height = 800
+
+x_monkey = 0
+y_monkey = 0
