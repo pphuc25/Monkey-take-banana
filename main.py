@@ -18,10 +18,12 @@ class Monkey:
             for _ in range(pos[0] - self.position[0]):
                 y_monkey += 100
                 print('Down')
+                time.sleep(1)
         else:
             for _ in range(self.position[0] - pos[0]):
                 y_monkey -= 100
                 print('Up')
+                time.sleep(1)
 
         if self.position[1] < pos[1]:
             for _ in range(pos[1] - self.position[1]):
@@ -31,6 +33,8 @@ class Monkey:
             for _ in range(self.position[1] - pos[1]):
                 x_monkey -= 100
                 print('Left')
+                time.sleep(1)
+
         self.position = pos
 
     def pick_chair(self, map):
@@ -245,17 +249,70 @@ def game_loop(auto_play = False):
             if auto_play:
                 continue
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and x_monkey >= 100:
-                    x_monkey -= 100
-                elif event.key == pygame.K_RIGHT and x_monkey < 700:
-                    x_monkey += 100
-                elif event.key == pygame.K_UP and y_monkey >= 100:
-                    y_monkey -= 100
-                elif event.key == pygame.K_DOWN and y_monkey < 700:
-                    y_monkey += 100
+            if event.type != pygame.KEYDOWN:
+                continue
+
+            if event.key == pygame.K_LEFT and x_monkey >= 100:
+                x_monkey -= 100
+            elif event.key == pygame.K_RIGHT and x_monkey < 700:
+                x_monkey += 100
+            elif event.key == pygame.K_UP and y_monkey >= 100:
+                y_monkey -= 100
+            elif event.key == pygame.K_DOWN and y_monkey < 700:
+                y_monkey += 100
 
         gameDisplay.blit(floor, (0, 0))
+
+        if auto_play:
+            if play.pick_stick_first() > play.pick_chair_first():
+                if not player.have_stick:
+                    if x_monkey != x_stick:
+                        x_monkey += 100
+                        time.sleep(1)
+                    elif y_monkey != y_stick:
+                        y_monkey += 100
+                        time.sleep(1)
+                elif not player.have_chair:
+                    if x_monkey == x_chair:
+                        if y_monkey < y_chair:
+                            y_monkey += 100
+                        else:
+                            y_monkey -= 100
+                    elif x_monkey < x_chair:
+                        x_monkey += 100
+                    else:
+                        x_monkey -= 100
+                    time.sleep(1)
+            elif not player.have_chair:
+                if x_monkey != x_chair:
+                    x_monkey += 100
+                    time.sleep(1)
+                elif y_monkey != y_chair:
+                    y_monkey += 100
+                    time.sleep(1)
+            elif not player.have_stick:
+                if x_monkey == x_stick:
+                    if y_monkey < y_stick:
+                        y_monkey += 100
+                    else:
+                        y_monkey -= 100
+                elif x_monkey < x_stick:
+                    x_monkey += 100
+                else:
+                    x_monkey -= 100
+                time.sleep(1)
+            if player.have_stick and player.have_chair:
+                if x_monkey != x_banana:
+                    if x_monkey < x_banana:
+                        x_monkey += 100
+                    else:
+                        x_monkey -= 100
+                    time.sleep(1)
+                elif y_monkey < y_banana:
+                    y_monkey += 100
+                else:
+                    y_monkey -= 100
+                time.sleep(1)
 
         if x_monkey == x_stick and y_monkey == y_stick:
             player.have_stick = True
@@ -275,64 +332,6 @@ def game_loop(auto_play = False):
             show_image(x_banana, y_banana, banana)
         else:
             finish()
-
-        if auto_play:
-            if play.pick_stick_first() > play.pick_chair_first():
-                if not player.have_stick:
-                    if x_monkey != x_stick:
-                        x_monkey += 100
-                        time.sleep(0.5)
-                    elif y_monkey != y_stick:
-                        y_monkey += 100
-                        time.sleep(0.5)
-                elif not player.have_chair:
-                    if x_monkey != x_chair:
-                        if x_monkey < x_chair:
-                            x_monkey += 100
-                        else:
-                            x_monkey -= 100
-                        time.sleep(0.5)
-                    else:
-                        if y_monkey < y_chair:
-                            y_monkey += 100
-                        else:
-                            y_monkey -= 100
-                        time.sleep(0.5)
-            else:
-                if not player.have_chair:
-                    if x_monkey != x_chair:
-                        x_monkey += 100
-                        time.sleep(0.5)
-                    elif y_monkey != y_chair:
-                        y_monkey += 100
-                        time.sleep(0.5)
-                elif not player.have_stick:
-                    if x_monkey != x_stick:
-                        if x_monkey < x_stick:
-                            x_monkey += 100
-                        else:
-                            x_monkey -= 100
-                        time.sleep(0.5)
-                    else:
-                        if y_monkey < y_stick:
-                            y_monkey += 100
-                        else:
-                            y_monkey -= 100
-                        time.sleep(0.5)
-
-            if player.have_stick and player.have_chair:
-                if x_monkey != x_banana:
-                    if x_monkey < x_banana:
-                        x_monkey += 100
-                    else:
-                        x_monkey -= 100
-                    time.sleep(0.5)
-                else:
-                    if y_monkey < y_banana:
-                        y_monkey += 100
-                    else:
-                        y_monkey -= 100
-                time.sleep(0.5)
 
         pygame.display.update()
         clock.tick(60)
