@@ -7,7 +7,6 @@ import pygame
 def distance(point1, point2):
     return abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
 
-
 class Monkey:
     def __init__(self):
         self.position = (0, 0)
@@ -190,7 +189,7 @@ def finish():
         TextRect.center = ((display_width / 2), (display_height / 2))
         gameDisplay.blit(TextSurf, TextRect)
 
-        button('REPLAY', 150, 600, 100, 50, GREEN, BRIGHT_GREEN, 20, game_loop)
+        button('MENU', 150, 600, 100, 50, GREEN, BRIGHT_GREEN, 20, game_intro)
 
         button('QUIT', 550, 600, 100, 50, RED, BRIGHT_RED, 20, quitgame)
 
@@ -198,9 +197,9 @@ def finish():
         clock.tick(30)
 
 def game_intro():
-    intro = True
+    time.sleep(0.25)
 
-    while intro:
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quitgame()
@@ -212,7 +211,7 @@ def game_intro():
 
         button('PLAY', 150, 600, 100, 50, GREEN, BRIGHT_GREEN, 20, game_loop)
 
-        button('AUTO PLAY', 350, 600, 100, 50, GREEN, BRIGHT_GREEN, 20, autoplay)
+        button('AUTO PLAY', 350, 600, 120, 50, GREEN, BRIGHT_GREEN, 20, autoplay)
 
         button('QUIT', 550, 600, 100, 50, RED, BRIGHT_RED, 20, quitgame)
 
@@ -277,7 +276,7 @@ def game_loop(auto_play = False):
             finish()
 
         if auto_play:
-            if play.pick_stick_first() > play.pick_chair_first():
+            if play.pick_stick_first() < play.pick_chair_first():
                 if not player.have_stick:
                     if x_monkey != x_stick:
                         x_monkey += 100
