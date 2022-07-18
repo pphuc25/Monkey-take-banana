@@ -54,7 +54,7 @@ class Main:
     def __init__(self) -> None:
         self.grid = [[0 for _ in range(ROW)] for _ in range(COLUMN)]
         self.visited = set()
-        self.chair, self.stick, self.banana = (0, 0), (0, 0), (0, 0)
+        self.monkey, self.chair, self.stick, self.banana =(0, 0), (0, 0), (0, 0), (0, 0)
 
     def set_location_object(self):
         # set the chair as number 1, stick as number 2 and bananas as number 3
@@ -113,10 +113,10 @@ class Main:
                     self.banana = (r, c)
 
     def pick_chair_first(self):
-        return distance((0, 0), self.chair) + distance(self.chair, self.stick) + distance(self.stick, self.banana)
+        return distance(self.monkey, self.chair) + distance(self.chair, self.stick) + distance(self.stick, self.banana)
 
     def pick_stick_first(self):
-        return distance((0, 0), self.stick) + distance(self.stick, self.chair) + distance(self.chair, self.banana)
+        return distance(self.monkey, self.stick) + distance(self.stick, self.chair) + distance(self.chair, self.banana)
 
     def movement(self, player):
         if self.pick_chair_first() < self.pick_stick_first():
@@ -147,6 +147,10 @@ stick = pygame.image.load('stick.png')
 banana = pygame.image.load('banana.png')
 floor = pygame.image.load('floor.jpg')
 icon = pygame.image.load('monkeyIcon.png')
+up = pygame.image.load('up.png')
+down = pygame.image.load('down.png')
+right = pygame.image.load('right.png')
+left = pygame.image.load('left.png')
 
 pygame.display.set_icon(icon)
 
@@ -247,6 +251,7 @@ def game_loop(auto_play=False):
     x_chair, y_chair = pos_chair[1] * 100, pos_chair[0] * 100
     x_stick, y_stick = pos_stick[1] * 100, pos_stick[0] * 100
     x_banana, y_banana = pos_banana[1] * 100, pos_banana[0] * 100
+    left_hint, right_hint, down_hint, up_hint = False, False, False, False
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -266,6 +271,55 @@ def game_loop(auto_play=False):
                 y_monkey -= ONE_STEP
             elif event.key == pygame.K_DOWN and y_monkey < MAX_LENGTH:
                 y_monkey += ONE_STEP
+            elif event.key == pygame.K_h:
+                play.monkey = (x_monkey // 100, y_monkey // 100)
+                if play.pick_stick_first() < play.pick_chair_first():
+                    if not player.have_stick:
+                        if x_monkey == x_stick:
+                            if y_monkey < y_stick:
+                                down_hint = True
+                            else:
+                                up_hint = True
+                        elif x_monkey < x_stick:
+                            right_hint = True
+                        else:
+                            left_hint = True
+                    elif not player.have_chair:
+                        if x_monkey == x_chair:
+                            if y_monkey < y_chair:
+                                down_hint = True
+                            else:
+                                up_hint = True
+                        elif x_monkey < x_chair:
+                            right_hint = True
+                        else:
+                            left_hint = True
+                elif not player.have_chair:
+                    if x_monkey != x_chair:
+                        right_hint = True
+                    elif y_monkey != y_chair:
+                        down_hint = True
+                elif not player.have_stick:
+                    if x_monkey == x_stick:
+                        if y_monkey < y_stick:
+                            down_hint = True
+                        else:
+                            up_hint = True
+                    elif x_monkey < x_stick:
+                        right_hint = True
+                    else:
+                        left_hint = True
+                if player.have_stick and player.have_chair:
+                    if x_monkey != x_banana:
+                        if x_monkey < x_banana:
+                            right_hint = True
+                        else:
+                            left_hint = True
+                        time.sleep(0.5)
+                    elif y_monkey < y_banana:
+                        down_hint = True
+                    else:
+                        up_hint = True
 
         gameDisplay.blit(floor, (0, 0))
 
@@ -338,6 +392,23 @@ def game_loop(auto_play=False):
                 else:
                     y_monkey -= ONE_STEP
                 time.sleep(0.5)
+
+        if up_hint:
+            show_image(x_monkey, y_monkey - ONE_STEP, up)
+            up_hint = False
+            time.sleep(1)
+        elif down_hint:
+            show_image(x_monkey, y_monkey + ONE_STEP, down)
+            down_hint = False
+            time.sleep(1)
+        elif left_hint:
+            show_image(x_monkey - ONE_STEP, y_monkey, left)
+            left_hint = False
+            time.sleep(1)
+        elif right_hint:
+            show_image(x_monkey + ONE_STEP, y_monkey, right)
+            right_hint = False
+            time.sleep(1)
 
         pygame.display.update()
         clock.tick(60)
