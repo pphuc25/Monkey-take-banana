@@ -246,6 +246,7 @@ def game_loop(auto_play=False):
     pos_chair = play.chair
     pos_stick = play.stick
     pos_banana = play.banana
+    hint = False
 
     x_monkey, y_monkey = 0, 0
     x_chair, y_chair = pos_chair[1] * 100, pos_chair[0] * 100
@@ -272,6 +273,7 @@ def game_loop(auto_play=False):
             elif event.key == pygame.K_DOWN and y_monkey < MAX_LENGTH:
                 y_monkey += ONE_STEP
             elif event.key == pygame.K_h:
+                hint = True
                 play.monkey = (x_monkey // 100, y_monkey // 100)
                 if play.pick_stick_first() < play.pick_chair_first():
                     if not player.have_stick:
@@ -396,21 +398,20 @@ def game_loop(auto_play=False):
         if up_hint:
             show_image(x_monkey, y_monkey - ONE_STEP, up)
             up_hint = False
-            time.sleep(1)
         elif down_hint:
             show_image(x_monkey, y_monkey + ONE_STEP, down)
             down_hint = False
-            time.sleep(1)
         elif left_hint:
             show_image(x_monkey - ONE_STEP, y_monkey, left)
             left_hint = False
-            time.sleep(1)
         elif right_hint:
             show_image(x_monkey + ONE_STEP, y_monkey, right)
             right_hint = False
-            time.sleep(1)
 
         pygame.display.update()
+        if hint:
+            time.sleep(1)
+            hint = False
         clock.tick(60)
 
 
