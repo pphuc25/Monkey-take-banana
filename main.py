@@ -275,53 +275,70 @@ def game_loop(auto_play=False):
             elif event.key == pygame.K_h:
                 hint = True
                 play.monkey = (x_monkey // 100, y_monkey // 100)
-                if play.pick_stick_first() < play.pick_chair_first():
-                    if not player.have_stick:
+                print(play.pick_stick_first(), play.pick_chair_first())
+                if not player.have_chair and not player.have_stick:
+                    if play.pick_stick_first() < play.pick_chair_first():
+
+                        #Pick stick
                         if x_monkey == x_stick:
                             if y_monkey < y_stick:
                                 down_hint = True
-                            else:
+                            elif y_monkey > y_stick:
                                 up_hint = True
                         elif x_monkey < x_stick:
                             right_hint = True
                         else:
                             left_hint = True
-                    elif not player.have_chair:
+
+                    else:
+                        # Pick chair
                         if x_monkey == x_chair:
                             if y_monkey < y_chair:
                                 down_hint = True
-                            else:
+                            elif y_monkey > y_chair:
                                 up_hint = True
                         elif x_monkey < x_chair:
                             right_hint = True
                         else:
                             left_hint = True
-                elif not player.have_chair:
-                    if x_monkey != x_chair:
+
+                elif player.have_stick and not player.have_chair:
+                    # Pick chair
+                    if x_monkey == x_chair:
+                        if y_monkey < y_chair:
+                            down_hint = True
+                        elif y_monkey > y_chair:
+                            up_hint = True
+                    elif x_monkey < x_chair:
                         right_hint = True
-                    elif y_monkey != y_chair:
-                        down_hint = True
-                elif not player.have_stick:
+                    else:
+                        left_hint = True
+
+                elif player.have_chair and not player.have_stick:
+                    # Pick stick
                     if x_monkey == x_stick:
                         if y_monkey < y_stick:
                             down_hint = True
-                        else:
+                        elif y_monkey > y_stick:
                             up_hint = True
                     elif x_monkey < x_stick:
                         right_hint = True
                     else:
                         left_hint = True
-                if player.have_stick and player.have_chair:
-                    if x_monkey != x_banana:
-                        if x_monkey < x_banana:
-                            right_hint = True
-                        else:
-                            left_hint = True
-                        time.sleep(0.5)
-                    elif y_monkey < y_banana:
-                        down_hint = True
+
+                else:
+                    #Pick banana
+                    if x_monkey == x_banana:
+                        if y_monkey < y_banana:
+                            down_hint = True
+                        elif y_monkey > y_banana:
+                            up_hint = True
+                    elif x_monkey < x_banana:
+                        right_hint = True
                     else:
-                        up_hint = True
+                        left_hint = True
+
+            print(down_hint, right_hint, left_hint, up_hint)
 
         gameDisplay.blit(floor, (0, 0))
 
