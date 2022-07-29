@@ -240,7 +240,7 @@ def game_loop(auto_play=False):
     play = Main()
     player = Monkey()
     play.set_location_object()
-    print(play.grid)
+    for i in play.grid: print(i)
     play.find_location_object(0, 0)
     print(play.chair, play.stick, play.banana)
     pos_chair = play.chair
@@ -338,7 +338,7 @@ def game_loop(auto_play=False):
                     else:
                         left_hint = True
 
-            print(down_hint, right_hint, left_hint, up_hint)
+            # print(down_hint, right_hint, left_hint, up_hint)
 
         gameDisplay.blit(floor, (0, 0))
 
