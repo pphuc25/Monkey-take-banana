@@ -2,7 +2,10 @@
 
 ## Introduction
 Here is the project coding in of school for coding argent play game monkey take bananas. It could be seen as a basic examples of matrix calculate application:
-![Monkey take bananas!](/images_demo/demo_images.png "demo game")
+
+<p align="center">
+  <img src=/images_demo/demo_images.png "demo game" />
+</p>
 
 ---
 
